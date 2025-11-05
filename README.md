@@ -21,16 +21,18 @@ debrid:
 
 1.  Clone this repository to your machine.
 2.  Navigate to the root of the repository.
-3.  Run the following command to build and start the application:
+3.  Run the following command to build and start the application. If you encounter a "permission denied" error, you may need to run the command with `sudo`.
 
 ```bash
-docker-compose up -d --build
+sudo docker compose up -d --build
 ```
+
+_Note: Depending on your system's configuration, you may need to use `docker-compose` (with a hyphen) instead of `docker compose`._
 
 4.  The application will be available at `http://[your-nas-ip]:1013`.
 
 To stop the application, run the following command:
 
 ```bash
-docker-compose down
+sudo docker compose down
 ```

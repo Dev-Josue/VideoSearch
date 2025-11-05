@@ -15,10 +15,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy frontend package.json and install dependencies
 COPY frontend/package.json frontend/package-lock.json ./frontend/
-RUN cd frontend && npm install && npm run build
+RUN cd frontend && npm install
 
 # Copy the rest of the application code
 COPY . .
+
+# Build frontend
+RUN cd frontend && npm run build
 
 # Expose port and run the application
 EXPOSE 80
