@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "1013:80"
+    volumes:
+      - /volume2/docker/config/videosearch:/app/config
+      - /volume1/media/Movies:/media/Movies
+      - /volume1/media/TV:/media/TV
+    restart: unless-stopped
