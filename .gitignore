@@ -6,3 +6,6 @@ __pycache__/
 node_modules
 .next
 npm-debug.log
+
+# Config
+config.yaml

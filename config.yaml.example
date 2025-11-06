@@ -1,0 +1,7 @@
+# This is an example configuration file.
+# Copy this file to "config.yaml" in your configuration directory
+# and replace the placeholder values with your actual API keys.
+
+tmdb_key: "YOUR_TMDB_API_KEY"
+realdebrid_key: "YOUR_REALDEBRID_API_KEY"
+premiumize_key: "YOUR_PREMIUMIZE_API_KEY"

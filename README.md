@@ -8,13 +8,15 @@ To run this application using Docker Compose, you will need to have Docker and D
 
 ### Configuration
 
-1.  Create a `config.yaml` file in the configuration directory you specified in the `docker-compose.yml` file (`/volume2/docker/config/videosearch` in the provided example).
-2.  Add your Real-Debrid and/or Premiumize API keys to the `config.yaml` file. See the example below:
+1.  **Locate the example configuration file:** In the root of this project, you will find a file named `config.yaml.example`.
+2.  **Copy the file:** Copy `config.yaml.example` to the configuration directory you specified in your `docker-compose.yml` file (e.g., `/volume2/docker/config/videosearch`) and rename it to `config.yaml`.
+3.  **Edit the file:** Open the new `config.yaml` file and replace the placeholder values with your actual API keys. You will need to get a free API key from [TMDB](https://www.themoviedb.org/documentation/api) for metadata.
 
+Your final `config.yaml` should look like this:
 ```yaml
-debrid:
-  realdebrid_api_key: "YOUR_REALDEBRID_API_KEY"
-  premiumize_api_key: "YOUR_PREMIUMIZE_API_KEY"
+tmdb_key: "YOUR_TMDB_API_KEY"
+realdebrid_key: "YOUR_REALDEBRID_API_KEY"
+premiumize_key: "YOUR_PREMIUMIZE_API_KEY"
 ```
 
 ### Usage
