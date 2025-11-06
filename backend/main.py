@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status, BackgroundTasks
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Literal
 
@@ -8,6 +9,8 @@ from backend.download import monitor_download
 import aiohttp
 
 app = FastAPI()
+
+app.mount("/", StaticFiles(directory="frontend/out", html=True), name="static")
 
 class SourceLink(BaseModel):
     title: str
