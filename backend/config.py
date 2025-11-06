@@ -23,9 +23,13 @@ CONFIG_PATH = os.path.join(CONFIG_DIR, "config.yaml")
 def load_config() -> Settings | None:
     if not os.path.exists(CONFIG_PATH):
         return None
-    with open(CONFIG_PATH, "r") as f:
-        config_data = yaml.safe_load(f)
-    return Settings(**config_data)
+    try:
+        with open(CONFIG_PATH, "r") as f:
+            config_data = yaml.safe_load(f)
+        return Settings(**config_data)
+    except Exception as e:
+        print(f"Warning: Could not load or parse config.yaml: {e}")
+        return None
 
 def save_config(settings: Settings):
     os.makedirs(CONFIG_DIR, exist_ok=True)

@@ -48,7 +48,8 @@ async def get_tmdb_key():
 
 @app.get("/api/settings/status")
 async def get_settings_status():
-    if settings:
+    # Check that the settings object exists and that the essential keys have been filled.
+    if settings and settings.tmdb_key and settings.realdebrid_key and settings.premiumize_key:
         return {"configured": True}
     else:
         return {"configured": False}

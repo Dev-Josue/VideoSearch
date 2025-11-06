@@ -12,6 +12,8 @@ To run this application using Docker Compose, you will need to have Docker and D
 2.  **Copy the file:** Copy `config.yaml.example` to the configuration directory you specified in your `docker-compose.yml` file (e.g., `/volume2/docker/config/videosearch`) and rename it to `config.yaml`.
 3.  **Edit the file:** Open the new `config.yaml` file and replace the placeholder values with your actual API keys. You will need to get a free API key from [TMDB](https://www.themoviedb.org/documentation/api) for metadata.
 
+**Important:** All API key fields must be filled in. Do not leave any of them blank.
+
 Your final `config.yaml` should look like this:
 ```yaml
 tmdb_key: "YOUR_TMDB_API_KEY"
