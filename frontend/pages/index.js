@@ -1,18 +1,53 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { getTrending, getPopular } from '../services/tmdb';
 
-export default function Home({ tmdbApiKey }) {
+export default function Home() {
   const [trending, setTrending] = useState([]);
   const [popular, setPopular] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (tmdbApiKey) {
-      process.env.NEXT_PUBLIC_TMDB_API_KEY = tmdbApiKey;
-      getTrending().then(data => setTrending(data.results));
-      getPopular().then(data => setPopular(data.results));
+    async function checkConfig() {
+      try {
+        const statusResponse = await fetch('/api/settings/status');
+        if (statusResponse.ok) {
+          const statusData = await statusResponse.json();
+          if (!statusData.configured) {
+            router.push('/setup');
+            return;
+          }
+
+          const keyResponse = await fetch('/api/settings/tmdb_key');
+          if (keyResponse.ok) {
+            const keyData = await keyResponse.json();
+            process.env.NEXT_PUBLIC_TMDB_API_KEY = keyData.tmdb_key;
+            const trendingData = await getTrending();
+            const popularData = await getPopular();
+            setTrending(trendingData.results);
+            setPopular(popularData.results);
+          } else {
+            throw new Error('Failed to fetch TMDB key');
+          }
+        } else {
+          throw new Error('Failed to fetch settings status');
+        }
+      } catch (error) {
+        console.error('Configuration check failed:', error);
+        // Optionally, redirect to an error page or show an error message
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [tmdbApiKey]);
+
+    checkConfig();
+  }, [router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
