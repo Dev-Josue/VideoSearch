@@ -7,36 +7,54 @@ export default function Home() {
   const [trending, setTrending] = useState([]);
   const [popular, setPopular] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     async function checkConfig() {
+      setLoading(true);
+      setError(null);
       try {
+        console.log("Checking application configuration status...");
         const statusResponse = await fetch('/api/settings/status');
-        if (statusResponse.ok) {
-          const statusData = await statusResponse.json();
-          if (!statusData.configured) {
-            router.push('/setup');
-            return;
-          }
-
-          const keyResponse = await fetch('/api/settings/tmdb_key');
-          if (keyResponse.ok) {
-            const keyData = await keyResponse.json();
-            process.env.NEXT_PUBLIC_TMDB_API_KEY = keyData.tmdb_key;
-            const trendingData = await getTrending();
-            const popularData = await getPopular();
-            setTrending(trendingData.results);
-            setPopular(popularData.results);
-          } else {
-            throw new Error('Failed to fetch TMDB key');
-          }
-        } else {
-          throw new Error('Failed to fetch settings status');
+        if (!statusResponse.ok) {
+          throw new Error(`Failed to fetch status: ${statusResponse.status}`);
         }
+
+        const statusData = await statusResponse.json();
+        console.log("Configuration status:", statusData);
+
+        if (!statusData.configured) {
+          console.log("Application not configured. Redirecting to /setup");
+          router.push('/setup');
+          return;
+        }
+
+        console.log("Fetching TMDB API key...");
+        const keyResponse = await fetch('/api/settings/tmdb_key');
+        if (!keyResponse.ok) {
+          throw new Error(`Failed to fetch TMDB key: ${keyResponse.status}`);
+        }
+
+        const keyData = await keyResponse.json();
+        const apiKey = keyData.tmdb_key;
+        console.log("TMDB API key loaded.");
+
+        if (!apiKey) {
+            throw new Error("TMDB API key is missing or empty. Please configure it in the setup page.");
+        }
+
+        console.log("Fetching data from TMDB...");
+        const trendingData = await getTrending(apiKey);
+        const popularData = await getPopular(apiKey);
+        console.log("Data fetched successfully.");
+
+        setTrending(trendingData.results);
+        setPopular(popularData.results);
+
       } catch (error) {
-        console.error('Configuration check failed:', error);
-        // Optionally, redirect to an error page or show an error message
+        console.error('An error occurred during startup:', error);
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -47,6 +65,16 @@ export default function Home() {
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+        <div>
+            <h1>An Error Occurred</h1>
+            <p style={{ color: 'red' }}>{error}</p>
+            <p>Please check the console for more details. You may need to visit the <Link href="/setup"><a>setup page</a></Link> to configure your API keys.</p>
+        </div>
+    );
   }
 
   return (
