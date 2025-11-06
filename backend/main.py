@@ -10,8 +10,6 @@ import aiohttp
 
 app = FastAPI()
 
-app.mount("/", StaticFiles(directory="frontend/out", html=True), name="static")
-
 class SourceLink(BaseModel):
     title: str
     quality: str
@@ -121,3 +119,5 @@ async def initiate_download(request: DownloadRequest, background_tasks: Backgrou
     background_tasks.add_task(monitor_download, request.service, debrid_id, filepath)
 
     return {"message": f"Download initiated for {request.link} via {request.service}"}
+
+app.mount("/", StaticFiles(directory="frontend/out", html=True), name="static")
